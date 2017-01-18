@@ -5,17 +5,18 @@ namespace framework;
 class dispatcher
 {
 	public static $uri;
+	public static $errorRoute = 'error';
 
 	private function __construct()
 	{
 	}
 
-	public static function run(array $routes = array())
+	public static function run(array $routes = [], $module = null)
 	{
 		static::$uri = trim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
 		$route = null;
 		$matched = false;
-		$matches = array();
+		$matches = [];
 
 		foreach ($routes as $key => $value) {
 			$regex = preg_replace('<@(\w+)>', '(?<$1>[\w-]+)', $key);
@@ -33,11 +34,17 @@ class dispatcher
 				$value
 			);
 		} else {
-			$route = 'error->_404';
+			$route = static::$errorRoute;
+			$matches['code'] = 404;
+		}
+
+		if ($module) {
+			$route = "{$module}\\{$route}";
 		}
 
 		$aux = explode('->', $route);
-		$class = 'controller\\' . basename($aux[0]);
+		$controller = basename($aux[0]);
+		$class = "controller\\{$controller}";
 		$action = isset($aux[1]) ? $aux[1] : 'index';
 
 		foreach (array_keys($matches) as $key) {
