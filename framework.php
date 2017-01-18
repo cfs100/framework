@@ -6,6 +6,7 @@ class dispatcher
 {
 	public static $uri;
 	public static $errorRoute = 'error';
+	public static $routes = [];
 
 	private function __construct()
 	{
@@ -13,14 +14,29 @@ class dispatcher
 
 	public static function run(array $routes = [], $module = null)
 	{
+		static::$routes = $routes;
 		static::$uri = trim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
+
+		$route = static::parseRoute();
+
+		$params = array_merge($route['params'], $_GET);
+
+		(new $route['class']($params))->{"{$route['action']}Action"}();
+	}
+
+	public static function parseRoute($uri = null)
+	{
 		$route = null;
 		$matched = false;
 		$matches = [];
 
-		foreach ($routes as $key => $value) {
+		if (is_null($uri)) {
+			$uri = static::$uri;
+		}
+
+		foreach (static::$routes as $key => $value) {
 			$regex = preg_replace('<@(\w+)>', '(?<$1>[\w-]+)', $key);
-			if (preg_match("<^$regex$>", static::$uri, $matches)) {
+			if (preg_match("<^$regex$>", $uri, $matches)) {
 				$matched = true;
 				break;
 			}
@@ -52,9 +68,14 @@ class dispatcher
 				unset($matches[$key]);
 			}
 		}
-		$params = array_merge($matches, $_GET);
 
-		(new $class($params))->{"{$action}Action"}();
+		return [
+			'route' => $route,
+			'controller' => $controller,
+			'class' => $class,
+			'action' => $action,
+			'params' => $matches,
+		];
 	}
 }
 
