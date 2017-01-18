@@ -122,7 +122,7 @@ class view
 	}
 }
 
-$base = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..');
+define('BASE_PATH', $base = realpath(__DIR__ . DIRECTORY_SEPARATOR . '..'));
 set_include_path(get_include_path() . ":.:$base/application:$base/library");
 
 spl_autoload_register(function($class) {
