@@ -17,14 +17,14 @@ class dispatcher
 		static::$routes = $routes;
 		static::$uri = trim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
 
-		$route = static::parseRoute();
+		$route = static::parseRoute(null, $module);
 
 		$params = array_merge($route['params'], $_GET);
 
 		(new $route['class']($params))->{"{$route['action']}Action"}();
 	}
 
-	public static function parseRoute($uri = null)
+	public static function parseRoute($uri = null, $module = null)
 	{
 		$route = null;
 		$matched = false;
