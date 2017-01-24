@@ -1,0 +1,19 @@
+{
+	"name": "cfs100/framework",
+	"type": "library",
+	"description": "Minimalist framework I use on my projects.",
+	"keywords": ["php", "framework", "minimalist"],
+	"homepage": "https://github.com/cfs100/framework",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Caio Ferreira Silva",
+			"email": "caio@ferreirasilva.com.br"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
+}
