@@ -17,10 +17,16 @@ class view
 		$this->add($this->path, $params);
 	}
 
-	public function add($name, $params = [])
+	public function add($name, $params = [], $return = false)
 	{
 		extract(static::$global);
 		extract($params);
+		if ($return) {
+			ob_start();
+		}
 		require 'view' . DIRECTORY_SEPARATOR . $name . '.phtml';
+		if ($return) {
+			return ob_get_clean();
+		}
 	}
 }
