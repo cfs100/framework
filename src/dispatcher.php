@@ -5,7 +5,6 @@ namespace framework;
 class dispatcher
 {
 	public static $uri;
-	public static $errorRoute = 'error';
 	public static $routes = [];
 
 	private function __construct()
@@ -50,8 +49,7 @@ class dispatcher
 				$value
 			);
 		} else {
-			$route = static::$errorRoute;
-			$matches['code'] = 404;
+			throw new \InvalidArgumentException("URI Not Found: {$uri}", 404);
 		}
 
 		if ($module) {
