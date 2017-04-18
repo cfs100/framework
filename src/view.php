@@ -19,13 +19,19 @@ class view
 
 	public function add($name, $params = [], $return = false)
 	{
+		${'@args'} = [];
+		foreach (['name', 'params', 'return'] as ${'@arg'}) {
+			${'@args'}[${'@arg'}] = ${${'@arg'}};
+			unset(${${'@arg'}});
+		}
+
 		extract(static::$global);
-		extract($params);
-		if ($return) {
+		extract(${'@args'}['params']);
+		if (${'@args'}['return']) {
 			ob_start();
 		}
-		require 'view' . DIRECTORY_SEPARATOR . $name . '.phtml';
-		if ($return) {
+		require 'view' . DIRECTORY_SEPARATOR . ${'@args'}['name'] . '.phtml';
+		if (${'@args'}['return']) {
 			return ob_get_clean();
 		}
 	}
