@@ -28,13 +28,13 @@ class dispatcher
 
 		$route = static::parseRoute(null, $module);
 
-		$params = array_merge($route['params'], $_GET);
+		$route['params'] = array_merge($route['params'], $_GET);
 
 		if (($debugger = static::debugger())) {
 			$debugger->info($route);
 		}
 
-		(new $route['class']($params))->{"{$route['action']}Action"}();
+		(new $route['class']($route['params']))->{"{$route['action']}Action"}();
 	}
 
 	public static function parseRoute($uri = null, $module = null)
