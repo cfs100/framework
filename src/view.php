@@ -6,10 +6,15 @@ class view
 {
 	private $path;
 	public static $global = [];
+	protected $debugger;
 
 	public function __construct($name)
 	{
 		$this->path = str_replace('\\', DIRECTORY_SEPARATOR, $name);
+
+		if (class_exists('\\debugger\\instance')) {
+			$this->debugger = new \debugger\instance(static::class);
+		}
 	}
 
 	public function render($params = [])
@@ -19,6 +24,10 @@ class view
 
 	public function add($name, $params = [], $return = false)
 	{
+		if ($this->debugger) {
+			$this->debugger->log("Rendering view \"{$this->path}\" to " . ($return ? 'return' : 'output immediately'));
+		}
+
 		${'@args'} = [];
 		foreach (['name', 'params', 'return'] as ${'@arg'}) {
 			${'@args'}[${'@arg'}] = ${${'@arg'}};

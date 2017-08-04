@@ -5,6 +5,7 @@ namespace framework;
 abstract class controller
 {
 	public $params = [];
+	protected $debugger;
 
 	public function __construct(array $params = [])
 	{
@@ -12,6 +13,11 @@ abstract class controller
 
 		if (method_exists($this, 'initialize')) {
 			$this->initialize();
+		}
+
+		if (class_exists('\\debugger\\instance')) {
+			$this->debugger = new \debugger\instance(static::class);
+			$this->debugger->log('Instantiating new controller');
 		}
 	}
 

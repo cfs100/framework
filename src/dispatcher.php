@@ -6,9 +6,19 @@ class dispatcher
 {
 	public static $uri;
 	public static $routes = [];
+	private static $debugger;
 
 	private function __construct()
 	{
+	}
+
+	private static function debugger()
+	{
+		if (!static::$debugger && class_exists('\\debugger\\instance')) {
+			static::$debugger = new \debugger\instance(static::class);
+		}
+
+		return static::$debugger;
 	}
 
 	public static function run(array $routes = [], $module = null)
@@ -20,11 +30,17 @@ class dispatcher
 
 		$params = array_merge($route['params'], $_GET);
 
+		if (($debugger = static::debugger())) {
+			$debugger->info($route);
+		}
+
 		(new $route['class']($params))->{"{$route['action']}Action"}();
 	}
 
 	public static function parseRoute($uri = null, $module = null)
 	{
+		$debugger = static::debugger();
+
 		$route = null;
 		$matched = false;
 		$matches = [];
@@ -49,7 +65,13 @@ class dispatcher
 				$value
 			);
 		} else {
-			throw new \InvalidArgumentException("URI Not Found: {$uri}", 404);
+			$error = "URI Not Found: {$uri}";
+
+			if ($debugger) {
+				$debugger->error($error);
+			}
+
+			throw new \InvalidArgumentException($error, 404);
 		}
 
 		if ($module) {
