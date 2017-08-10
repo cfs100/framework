@@ -64,6 +64,17 @@ class dispatcher
 				},
 				$value
 			);
+			if (strpos($route, '?') !== false) {
+				$aux = explode('?', $route);
+				for ($i = 1; $i < count($aux); $i++) {
+					$params = [];
+					parse_str($aux[$i], $params);
+					if ($params) {
+						$matches = array_merge($matches, $params);
+					}
+				}
+				$route = $aux[0];
+			}
 		} else {
 			$error = "URI Not Found: {$uri}";
 
