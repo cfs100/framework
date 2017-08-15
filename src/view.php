@@ -25,7 +25,7 @@ class view
 	public function add($name, $params = [], $return = false)
 	{
 		if ($this->debugger) {
-			$this->debugger->log("Rendering view \"{$this->path}\" to " . ($return ? 'return' : 'output immediately'));
+			$this->debugger->log("Rendering view \"{$name}\" to " . ($return ? 'return' : 'output immediately'));
 		}
 
 		${'@args'} = [];
