@@ -11,13 +11,13 @@ abstract class controller
 	{
 		$this->params = $params;
 
-		if (method_exists($this, 'initialize')) {
-			$this->initialize();
-		}
-
 		if (class_exists('\\debugger\\instance')) {
 			$this->debugger = new \debugger\instance(static::class);
 			$this->debugger->log('Instantiating new controller');
+		}
+
+		if (method_exists($this, 'initialize')) {
+			$this->initialize();
 		}
 	}
 
