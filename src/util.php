@@ -8,7 +8,7 @@ abstract class util
 	{
 		$string = trim(strtolower(
 			preg_replace(
-				'<([^\w\d]|[- ])+>i', '-',
+				'<([^\w\d]|[- _])+>i', '-',
 				iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', preg_replace('<\'|">', '', $string))
 			)
 		), '-');
